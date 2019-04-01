@@ -2,6 +2,10 @@
 .Rhistory
 .Rapp.history
 
+#ignore Rproj and pdf
+*.Rproj
+*.pdf
+
 # Session Data files
 .RData
 
