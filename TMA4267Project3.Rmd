@@ -37,12 +37,14 @@ Since we are working with computers it is relatively easy to ensure that the fac
 An obvious choice of response variable for this problem is the time spent to perform the calculations, and using seconds as unit of measurement makes most sense for the scale of our experiment. Time measurement is easily performed to a high degree of precision by using basic functions in the different programming languages: Let the program prepare all necessary data and variables, log the internal time for the computer before and after the calculations, and print their difference. The variability of starting and stopping the watch is of order $10^{-7}$, and is therefore considered negligible.
 
 ## 4. Choice of design
-The experiment was designed as a $2^3$ factorial design including one replication, which resulted in a total of 16 runs. As the complete experiment could be carried out in a short amount of time, it was unnecessary to use a fractional factorial design.
+The experiment was designed as a full $2^4$ factorial design, which resulted in a total of 16 runs. As the complete experiment could be carried out in a short amount of time, it was unnecessary to use a fractional factorial design.
 
-This is an experiment in which we have a high degree of control over the factors. At the same time, the measurements had some uncertanty to it as we did not have the best equipment. This fact in addition to few factors made it clear that we needed to have replication of the experiments to get enough measurements. Blocking on the other hand was deemed unnecessary for this experiment, since there was no reason to divide the experiments into parts. All of the runs were repeated under the same conditions.
+This is an experiment in which we have a high degree of control over the factors. Matrices of equal size were used throughout the experiment, and the computers had the same initial settings for each run (that being that the computers were not running any unwanted background processes). While it is true that we do not have complete control over how the computers spend their processing power, the variations should be very small and we therefore deemed it unnecessary to perform replicates of the experiment. Blocking of the runs is also unnecessary for this experiment, since there is no reason to divide the experiments into parts. All of the runs can be performed successively.
 
 ## 5. Implementation of the experiment
-To perform the experiment, some testing had to be performed on the equipment. First, we had to find the optimal way of calculating the mass reduction. Our first though was to have a scale under the bucket to measure the weight, but the scales we had available were chosen to be to uncertain. Instead, we obtained a bucket that was sylindrical. This made it easy to measure difference in volume as we could just measure the difference in height before and after the drop and then do some volume-estimations as the cross-section on each level of the bucket would be identical. To make sure that the drop was the same every time, we built a platform to put the bottle on with a string attached to it. To run the experiment, we would just pull the string such that the bottle could fall. The other two factors, size and weight, was very easy to keep constant as the size only was dependent on the bottle we used and the weight was kept equal since the bottle was sealed. Lastly, before every drop, we filled up the bucket to the edge to make sure that the volume of water in the bucket before the drop was the same every run.
+Before the experiments were performed, both computers were rebooted. All programs and background tasks listed in the task manager, that were deemed **not** necessary for normal performance, were terminated. Two programs were written in both R and Python, one for vectorized computations, and one using the naive approach, calculating the matrix product entries element-wise using for loops and indexing. All four programs construct two random matrices of size $200\times200$ using the same probability distribution. Then the start time is stored in a variable, before the same matrix multiplication is performed 30 times using a ```for```-loop. Immediately on exit from the loop, the end time is recorded, and the difference between end and start time is printed to the screen. To measure the effect of increased memory usage, two instances of a python script performing matrix calculations in an endlesss loop until interrupted, were running for all the relevant experiments. 
+
+On both computers, we performed a fresh install of Anaconda Python 3.6 and R 3.4.3. All scripts were run from terminal, and thus we have minimal impact from IDE's (integrated development environment) on the performance. 
 
 The order of the tests were performed according to the plan given by the ```FrF2()``` function in ```R``` which gives a randomized test setup. The labels are given by
 
@@ -53,7 +55,7 @@ table <-matrix(c("Hoyt", "Lavt", "Hel", "Halv", "Stor", "Liten"), 2, 3, dimnames
 kable(table)
 ```
 
-Each experiment was done independently. Between each run, we reset the platform to its original state and filled the bucket to the same level as before the last drop.
+Each experiment was done independently. Between each run we quit the programs that had been running on the computers. One might argue that we should have restarted the computers before each experiment, but we believed that this would not have any significant impact on the result of the experiments.
 
 ```{r design}#, include = TRUE}
 plan <- FrF2(nruns=2^3, nfactors=3, randomize=FALSE,replications = 2)
@@ -72,7 +74,7 @@ fit4 <- lm(y~(A+B+C)^3, data = plan)
 summary(fit4)$coef
 #fit4$coef
 ```
-The summary shows the estimated coefficients for the regression model. We see that all of the residuals are 0 since we have 16 explanatory variables and 16 data points. Furthermore, it appears that A (language) and C (vectorization) contribute the most to the running time of the code. The interaction between these is also important for the time. As the levels of the factors we have chosen for this experiment are not assosciated with any continous numerical values, the intercept does not have a clear interpretation here. 
+The summary shows the estimated coefficients for the regression model. It appears that A1 (height) and C1 (size of bottle) contributes the most to the mass loss. The interaction between these is also of importance to the response. As the levels of the factors we have chosen for this experiment (-1 and 1) are not assosciated with any continous numerical values, the intercept does not have any solid interpretation.
 
 
 
@@ -80,7 +82,7 @@ The summary shows the estimated coefficients for the regression model. We see th
 ```{r, echo = F, eval = FALSE}
 # Visualization
 
-anova(fit4)
+anova(fit4) # Analysis of variance
 MEPlot(fit4) # main effects plot
 IAPlot(fit4) # interaction effect plots
 ```
@@ -90,8 +92,16 @@ effects <- 2*fit4$coeff
 effects
 ```
 
-The main effects plot is a visualization of the summary above. It shows the impact on the response that stems from changing the level of each factor.
-For all pairs of variables, where one is changed and the other fixed, the interaction plot matrix shows the corresponding change in the response. Thus parallell lines indicate that there is little interaction between the given pair of variables and vice versa. In accordance with what we saw in the summary, it appears that the strongest interaction is between factors A and C. Additionally, there seems to be some interaction between factors C and D, although it may not be significant.
+The main effects plot is a visualization of the summary above. It shows the impact on the expected avereage response resulting from a change in level, e.g from 1 to -1, for each factor.
+If there is no interaction between two factors, the effect of one factor is the same independent of the level of the other factor. This results in parallel lines in the interaction plot. 
+Looking at the interaction plot, it seems as the effect of the content of the bottle is independent on the size of the bottle when the size of the bottle is at a high level, i.e when using a large bottle.
+That is, when using a large bottle we expect to get the same loss in volume independent on the amount in which the bottle is filled. 
+We also observe this independent effect when the height in which the bottle is dropped is at a low level, i.e when the bottle is dropped at a lower height.
+That is, when the bottle is dropped from a lower height, we expect the to get the same loss in volume independent on the amount of content in the bottle.
+
+We also observe that the effect of the size of the bottle is positive when the height from which the bottle is dropped is both at a high and low level. That is, the volume loss is greater when using a larger bottle, independent of the height from which it is dropped. 
+
+In accordance with what we saw in the summary, it appears that the strongest interaction is between factors A and C, i.e the height in which the bottle was dropped and the size of the bottle. Additionally, there seems to be some interaction between factors C and D, although it may not be significant.
 
 ```{r, echo = F, eval = FALSE}
 # Displays cut-off values for significant variables according to Lenths. May remove plot if not deemed necessary.
