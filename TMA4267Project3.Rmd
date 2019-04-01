@@ -59,7 +59,7 @@ Each experiment was done independently. Between each run we quit the programs th
 
 ```{r design}#, include = TRUE}
 plan <- FrF2(nruns=2^3, nfactors=3, randomize=FALSE,replications = 2)
-plan
+
 ```
 
 ## 6. Analysis of data
