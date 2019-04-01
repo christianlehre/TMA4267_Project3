@@ -1,5 +1,5 @@
 ---
-title: "Volume loss  "
+title: "Water mass reduction"
 author: "Bøe, Lehre, Rønold"
 output:
   pdf_document: default
@@ -15,18 +15,16 @@ library(knitr)
 set.seed(42)
 ```
 ## 1. Issue to be addressed
-This report presents a two-level factorial experiment in which we consider how different factors affect the running time of a program performing computations on a laptop. As students of industrial mathematics, many of our courses rely heavily on information technology, and a significant amount of time is spent on programming. It would be useful to know more about which factors have the most influence on the performance of our programs. 
-
-There already exists benchmark tests and a lot of literature evaluating the effects of different factors on the performance of computer programs. These often evaluate general performance, and therefore take into consideration different tasks that are not relevant throughout our courses. We've therefore chosen to perform a speed test on matrix multiplication, an operation that is relevant for all our courses. 
+This report presents a two-level factorial experiment in which we consider how different factors affect the amount of water that is removed from a bucket when dropping a bottle into it. Experiments regarding the effect of items falling into water is relevant in many applications, in a large scale it is of interest to study the effect of pieces of mountain dropping into the ocean creating waves and in a complete different setting is is of interest how much splash a professional diver makes. It would therefore be interesting to study how different factors impact the amount of water that is removed from a bucket when considering properties such as heigth, size and weigth. 
 
 ## 2. Selection of factors and levels
-We have chosen four factors that we believe are relevant for the running time of the matrix multiplication. The first factor is which programming language the computation is executed in. We have chosen the languages Python and R which are the primary languages used for our courses. 
+We have chosen three factors that we believe are relevant for the amount of water removed from the bucket. The first factor is which bottle to be dropped. We have chosen to use two different bottles, one bottle with a volume of 1,5 litres and one with a volume of 0,5 litres. The bottles have the exact same shape, but vary in size.
 
-The second factor considered is the computer hardware specifications. We excpect the CPU clockrate to be the most significant part of this factor, but as two computers only differing in processor frequency were not available for the experiment, the hardware specifications are considered as a factor ranging from "High" to "Low", since e.g. both CPU and RAM are better on the superior computer.
+The second factor considered is the heigth from which the bottles are dropped. We define two possible heigths
+
 
 The third factor is whether vectorized functions are used to perform the calculations. A common mistake while learning scientific computing is using nested ```for```-loops and indexing of arrays to perform computations. Most languages have already implemented and optimized  vectorized functions, performing these operations on all array elements simultanously. We want to investigate the differences between these vectorized functions and the *naive* approach using nested ```for```-loops.
 
-The fourth factor is memory usage, i.e whether or not there are other programs running on the computer, hogging RAM and other resources. We believe that other programs running on the PC will slow down the matrix multiplication. 
 
 As this is a two-level factorial experiment, all factor levels are recoded to -1 or 1. For language and vectorization of functions, which are qualitative factors, this recoding is quite natural. Either we write in Python or R, and calculations are performed using vectorized or non-vectorized functions. We've considered hardware specifications as a binary variable. Through a different design of the experiment it's possible to quantify this variable, e.g. by CPU clockrate, which we may have used for predictions on processors not included in this experiment. Similarily we've only considered whether we run programs in the background or not, but it could have been possible to take into consideration the amount of resources required for these programs to run. 
 
@@ -49,15 +47,15 @@ The order of the tests were performed according to the plan given by the ```FrF2
 
 ```{r table}#, echo = FALSE}
 factors = c("Language(A)", "Hardware(B)", "Vectorized(C)", "RAM Usage(D)")
-factorlabs = c("A", "B", "C", "D")
+factorlabs = c("height", "containment", "size")
 table <-matrix(c("R", "Python", "High", "Low", "Vectorized", "Naive", "High", "Low"), 2, 4, dimnames = list(c(1, -1), factors))
 kable(table)
 ```
 
 Each experiment was done independently. Between each run we quit the programs that had been running on the computers. One might argue that we should have restarted the computers before each experiment, but we believed that this would not have any significant impact on the result of the experiments.
 
-```{r design}#, include = FALSE}
-plan <- FrF2(nruns=2^4, nfactors=4, randomize=TRUE, factornames = factornames)
+```{r design}
+plan <- FrF2(nruns=2^3, nfactors=3, replications=2, randomize=FALSE)
 plan
 ```
 
@@ -68,9 +66,9 @@ plan
 y <- scan("response.txt")
 plan <- add.response(plan, y)
 # Fit model
-fit4 <- lm(y~.^4, data = plan)
+fit4 <- lm(y~(A+B+C)^3, data = plan)
 summary(fit4)$coef
-#fit4$coef
+fit4$coef
 ```
 The summary shows the estimated coefficients for the regression model. We see that all of the residuals are 0 since we have 16 explanatory variables and 16 data points. Furthermore, it appears that A (language) and C (vectorization) contribute the most to the running time of the code. The interaction between these is also important for the time. As the levels of the factors we have chosen for this experiment are not assosciated with any continous numerical values, the intercept does not have a clear interpretation here. 
 
