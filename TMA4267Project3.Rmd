@@ -46,9 +46,9 @@ On both computers, we performed a fresh install of Anaconda Python 3.6 and R 3.4
 The order of the tests were performed according to the plan given by the ```FrF2()``` function in ```R``` which gives a randomized test setup. The labels are given by
 
 ```{r table}#, echo = FALSE}
-factors = c("Language(A)", "Hardware(B)", "Vectorized(C)", "RAM Usage(D)")
-factorlabs = c("height", "containment", "size")
-table <-matrix(c("R", "Python", "High", "Low", "Vectorized", "Naive", "High", "Low"), 2, 4, dimnames = list(c(1, -1), factors))
+factors = c("Høyde(H)", "Innhold(I)", "Str(S)")
+factorlabs = c("H", "I", "S")
+table <-matrix(c("Høyt", "Lavt", "Hel", "Halv", "Stor", "Liten"), 2, 3, dimnames = list(c(1, -1), factors))
 kable(table)
 ```
 
@@ -65,7 +65,6 @@ plan
 #Response variable
 y <- scan("response.txt")
 plan <- add.response(plan, y)
-# Fit model
 fit4 <- lm(y~(A+B+C)^3, data = plan)
 summary(fit4)$coef
 fit4$coef
@@ -77,6 +76,8 @@ The summary shows the estimated coefficients for the regression model. We see th
 
 ```{r, echo = F, eval = FALSE}
 # Visualization
+
+anova(fit4)
 MEPlot(fit4) # main effects plot
 IAPlot(fit4) # interaction effect plots
 ```
