@@ -6,6 +6,8 @@
 *.Rproj
 *.pdf
 
+.DS_Store
+
 # Session Data files
 .RData
 
