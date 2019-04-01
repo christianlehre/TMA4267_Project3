@@ -1,4 +1,4 @@
---
+---
 title: "Running Time of Matrix Multiplication"
 author: "Bøe, Lehre, Rønold"
 output:
@@ -49,16 +49,16 @@ On both computers, we performed a fresh install of Anaconda Python 3.6 and R 3.4
 The order of the tests were performed according to the plan given by the ```FrF2()``` function in ```R``` which gives a randomized test setup. The labels are given by
 
 ```{r table}#, echo = FALSE}
-factors = c("Language(A)", "Hardware(B)", "Vectorized(C)", "RAM Usage(D)")
-factorlabs = c("A", "B", "C", "D")
-table <-matrix(c("R", "Python", "High", "Low", "Vectorized", "Naive", "High", "Low"), 2, 4, dimnames = list(c(1, -1), factors))
+factors = c("Hoyde(H)", "Innhold(I)", "Str(S)")
+factorlabs = c("H", "I", "S")
+table <-matrix(c("Hoyt", "Lavt", "Hel", "Halv", "Stor", "Liten"), 2, 3, dimnames = list(c(1, -1), factors))
 kable(table)
 ```
 
 Each experiment was done independently. Between each run we quit the programs that had been running on the computers. One might argue that we should have restarted the computers before each experiment, but we believed that this would not have any significant impact on the result of the experiments.
 
-```{r design}#, include = FALSE}
-plan <- FrF2(nruns=2^4, nfactors=4, randomize=TRUE, factornames = factornames)
+```{r design}#, include = TRUE}
+plan <- FrF2(nruns=2^3, nfactors=3, randomize=FALSE,replications = 2)
 plan
 ```
 
@@ -69,7 +69,8 @@ plan
 y <- scan("response.txt")
 plan <- add.response(plan, y)
 # Fit model
-fit4 <- lm(y~.^4, data = plan)
+plan
+fit4 <- lm(y~(A+B+C)^3, data = plan)
 summary(fit4)$coef
 #fit4$coef
 ```
@@ -80,6 +81,8 @@ The summary shows the estimated coefficients for the regression model. We see th
 
 ```{r, echo = F}
 # Visualization
+
+anova(fit4)
 MEPlot(fit4) # main effects plot
 IAPlot(fit4) # interaction effect plots
 ```
