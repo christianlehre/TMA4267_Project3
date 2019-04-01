@@ -1,9 +1,9 @@
 ---
-title: "Running Time of Matrix Multiplication"
+title: "Volume loss  "
+>>>>>>> aa3de34790fc227f36c08c4ae1e98f0ed321fb94
 author: "Bøe, Lehre, Rønold"
 output:
   pdf_document: default
-  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -64,7 +64,7 @@ plan <- FrF2(nruns=2^3, nfactors=3, randomize=FALSE,replications = 2)
 
 ## 6. Analysis of data
 
-```{r fit_model, echo = F}
+```{r fit_model, echo = F, eval=FALSE}
 #Response variable
 y <- scan("response.txt")
 plan <- add.response(plan, y)
@@ -79,7 +79,7 @@ The summary shows the estimated coefficients for the regression model. We see th
 
 
 
-```{r, echo = F}
+```{r, echo = F, eval = FALSE}
 # Visualization
 
 anova(fit4)
@@ -87,7 +87,7 @@ MEPlot(fit4) # main effects plot
 IAPlot(fit4) # interaction effect plots
 ```
 
-```{r, include = F}
+```{r, include = F, eval = FALSE}
 effects <- 2*fit4$coeff
 effects
 ```
@@ -95,7 +95,7 @@ effects
 The main effects plot is a visualization of the summary above. It shows the impact on the response that stems from changing the level of each factor.
 For all pairs of variables, where one is changed and the other fixed, the interaction plot matrix shows the corresponding change in the response. Thus parallell lines indicate that there is little interaction between the given pair of variables and vice versa. In accordance with what we saw in the summary, it appears that the strongest interaction is between factors A and C. Additionally, there seems to be some interaction between factors C and D, although it may not be significant.
 
-```{r, echo = F}
+```{r, echo = F, eval = FALSE}
 # Displays cut-off values for significant variables according to Lenths. May remove plot if not deemed necessary.
 LenthPlot(fit4, plt = T)
 ```
@@ -105,7 +105,7 @@ In the Lenth plot we see the effect values for each of the factors and the inter
 Through inspection of the Lenth plot, vectorizing of functions is clearly an active effect, as its value is greater than the SME. The value for language choice seems significant as as well, since its effect value is higher than the ME. This is not a surprising result, but what is more interesting is the interaction value between language and vectorization. Even though we saw a large increase for vectorization in R, the difference was small compared to the difference in Python, where the non-vectorized functions were almost as high as a factor thousand times the running time for the vectorized function. Through further investigation, we found an explanation for this. The ```numpy``` library which is used for scientific computing in Python, is largely written in C and therefore avoids a lot of the time consuming operations performed "behind the scenes" in standard Python.
 
 Another way to estimate the variance, is to make the assumption that high order interactions, with three or more factors are zero. Under this assumption, the regression model fit is given by
-```{r more_info, echo = F}
+```{r more_info, echo = F, eval = FALSE}
 fit2 <- lm(y~.^2,data=plan)
 summary(fit2)
 # 1. fitted vs studentized residuals
@@ -122,46 +122,3 @@ From the Q-Q plot it's not easy to conclude anything. There is a trend for the l
 In conclusion the most significant effects among those tested for the running time of matrix multiplication are vectorization of functions, and choice of language. The interaction between these plays an important role as well, as the difference between vectorized and non-vectorized functions affects the running time to a larger degree for Python than for R. 
 
 In comparison to these effects, memory usage and hardware differences do not have a signifcant effect on running time. Further experiments should be performed using only vectorized functions, to investigate how these effects affect the program running time. It could also be interesting to find out if the relations are similar for other calculations such as solving linear systems, or for sparse matrix computations.
-
-\newpage
-# Appendix A: Program Code
-```{r, eval = F}
-# R NAIVE CODE
-A = matrix(rnorm(40000, mean=0, sd=1), nrow = 200, ncol=200)
-B = matrix(rnorm(40000, mean=0, sd=1), nrow = 200, ncol=200)
-manual = function(A,B){
-  C = matrix(0L, nrow = dim(A)[1], ncol = dim(A)[2])
-  for (i in 1:dim(A)[1]){
-    
-    for (j in 1: dim(A)[1]){
-      sum = 0
-      for (k in 1:dim(A)[1]){
-        sum = sum + A[i,k]*B[k,j]
-      }
-      C[i,j] = sum
-    }
-  }
-    
-  return (C)
-}
-indicator = "Ferdig"
-start = Sys.time()
-for (i in 1:30){
-  manual(A,B)
-}
-end = Sys.time()
-print(end-start)
-```
-
-```{r, eval = F}
-# R VECTORIZED CODE
-set.seed(39)
-A = matrix(rnorm(40000, 0, 1), nrow = 200, ncol=200)
-B = matrix(rnorm(40000, 0, 1), nrow = 200, ncol=200)
-start = Sys.time()
-for (i in 1:30) {
-  C = A%*%B
-}
-end = Sys.time()
-print(end- start)
-```
