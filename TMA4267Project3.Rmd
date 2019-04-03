@@ -15,12 +15,12 @@ library(knitr)
 set.seed(42)
 ```
 ## 1. Issue to be addressed
-This report presents a two-level factorial experiment in which we consider how different factors affect the amount of water that is removed from a bucket when dropping a bottle into it. Experiments regarding the effect of items falling into water is relevant in many applications. In a large scale it is of interest to study the effect of pieces of mountain dropping into the ocean creating waves and in a complete different setting is is of interest how much splash a professional diver makes. It would therefore be interesting to study how different factors impact the amount of water that is removed from a bucket when dropping a bottle and considering properties such as height above the water from which the bottles are dropped, size of the bottles and mass density of the bottles.
+This report presents a two-level factorial experiment in which we consider how different factors affect the amount of water that is removed from a bucket when dropping a bottle into it. Experiments regarding the effect of items falling into water is relevant in many applications. In a large scale it is of interest to study the effect of pieces of mountain dropping into the ocean creating waves and in a complete different setting it is of interest how much splash a professional diver makes. It would therefore be interesting to study how different factors impact the amount of water that is removed from a bucket when dropping a bottle and considering properties such as height above the water from which the bottles are dropped, size of the bottles and mass density of the bottles.
 
-Former knowledge from fluid mechanics courses gives us some intuition of the expected behaviour. However, it is not obvious which factors that contribute the most to removal of water. We wish to explore this further and in addition determine if there is any interaction between the factors.  
+Former knowledge from fluid mechanics courses gives us some intuition of the expected behaviour. However, it is not obvious which factors that contribute the most to removal of water. We wish to explore this further and in addition determine if there are any interactions between the factors.  
 
 ## 2. Selection of factors and levels
-We have chosen three factors that we believe are relevant for the amount of water removed from the bucket. The first factor is which bottle to be dropped. We have chosen to use two different bottles, one bottle with a volume of 1,5 litres and one with a volume of 0,5 litres. The bottles have the exact same shape, but vary in size. It is natural to assume that a larger volume will affect the removal of water and so we wish to investigate the difference between using  a large and small bottle. 
+We have chosen three factors that we believe are relevant for the amount of water removed from the bucket. The first factor is which bottle to be dropped. We have chosen to use two different bottles, one bottle with a volume capacity of 1,5 litres and one with a volume capacity of 0,5 litres. The bottles have the exact same shape, but vary in size. It is natural to assume that a larger volume will affect the removal of water and so we wish to investigate the difference between using  a large and small bottle. 
 
 The second factor to be considered is the height from which the bottles are dropped.  We define two heights in this experiment, 1 and 2 meters above the water surface.   This again is expected to affect the removal of water, as the difference in speed when hitting the surface is quite different from these heights.
 
@@ -28,18 +28,18 @@ The third factor to be considered is mass density in the bottles. Archimedes law
 
 As this is a two-level factorial experiment, all factor levels are recoded to -1 or 1. For bottle type, which is a qualitative factor, this recoding is quite natural. Either we use the large or the small bottle. We’ve considered mass density as a binary variable. It is either higher or lower than water, which  assumably is what matters the most.  However, the effect will probably be dependent of  how far away from equality with water the mass densities are. The last factor, height from which the bottles are dropped, is the least intuitive to be recoded to -1 or 1, but by defining two heights that is expected to give a noticeable change in speed it is possible to define one as low and the other as high. 
 
-To assure that the type of bottle is at the desired level is trivial. For the densitites it is a bit more difficult, but we have the advantages of knowing both the bottles size and the mass density of water. Thus by weighing the bottles with a precise weigth, we can assure that the densities are at the desired level. For the density we simply filled the bottles with water until this was achieved. For the high densities we filled them with water and then added extra weigth in form of led.
+To assure that the type of bottle is at the desired level is trivial. For the densitites it is a bit more difficult, but we have the advantages of knowing both the bottles size and the mass density of water. Thus by weighing the bottles with a precise weigth, we can assure that the densities are at the desired level. For the density we simply filled the bottles with water until this was achieved. For the high densities we filled them with water and then added extra weigth in form of lead.
 
 ## 3. Selection of response variable
-The response variable for this problem should be a measurement of how much water is removed from the bottle. To measure this there are several options. A natural measurement is weight, however measuring this with a scale can be difficult. Another approach is to use the reduction in waterlevel height, as it can be measured much more exact by using a measuring tape. This is not very relatable tough, unless the bucket is thoroughly described. We chose to instead multiply this height by pi and the radius to obtain the volume reduction. We then multiplied this by the mass density of water to obtain the mass reduction. The uncertainty in measuring the height was judged to be approximately 0.2 millimetres, which corresponds to an uncertainty of 0.012 kilograms in the mass measurement.
+The response variable for this problem should be a measurement of how much water is removed from the bucket. To measure this there are several options. A natural measurement is weight, however measuring this with a scale can be difficult. Another approach is to use the reduction in waterlevel height, as it can be measured much more exact by using a measuring tape. This is however not very relatable, unless the bucket is thoroughly described. We chose to instead multiply this height by $\pi$ and the radius of the bucket to obtain the volume reduction. We then multiplied this by the mass density of water to obtain the mass reduction. The uncertainty in measuring the height was judged to be approximately 0.2 millimetres, which corresponds to an uncertainty of 0.012 kilograms in the mass measurement.
 
 ## 4. Choice of design
 The experiment was designed as a $2^3$ factorial design with two replications, which resulted in a total of 16 runs. As the complete experiment could be carried out in a short amount of time, it was unnecessary to use a fractional factorial design.
 
-This is an experiment in which we have a high degree of control over the factors. At the same time, the measurements had some uncertanty to it as we did not have the best equipment. This fact in addition to few factors made it clear that we needed to have replication of the experiments to get enough measurements. Blocking on the other hand was deemed unnecessary for this experiment, since there was no reason to divide the experiments into parts. All of the runs were repeated under the same conditions.
+This is an experiment in which we have a high degree of control over the factors. At the same time, the measurements had some uncertanty to it as we did not have the best equipment available. This fact, in addition to few factors, made it clear that we needed to have replication of the experiments to get enough measurements. Blocking on the other hand was deemed unnecessary for this experiment, since there was no reason to divide the experiments into parts. All of the runs were repeated under the same conditions.
 
 ## 5. Implementation of the experiment
-To perform the experiment, some testing had to be performed on the equipment. First, we had to find the optimal way of calculating the mass reduction. Our first though was to have a scale under the bucket to measure the weight, but the scales we had available were considered too uncertain. Instead, we selected a bucket that was sylindrical. This made it easy to measure difference in volume as we could just measure the difference in water height before and after the drop and then multiply it by pi and the radius squared. To make sure that the height was the same every time, we built a platform to put the bottle on with a string attached to it. To run the experiment, we would just pull the string such that the bottle fell. The size of the bottle was easy to keep constant as the size only was dependent on the bottle we used. As we had several equal bottles available we were also able to keep the mass density constant by filling one with high density and one with low density before starting the experiments. Thus we did not have to empty the bottles as a cause of the randomized order of the experiments. Lastly, before every drop, we filled up the bucket to the edge to make sure that the volume of water in the bucket before the drop was the same in every run.
+To perform the experiment, some testing had to be performed on the equipment. First, we had to find the optimal way of calculating the mass reduction. Our first thought was to have a scale under the bucket to measure the weight, but the scales we had available were considered unreliable and uncertain. Instead, we chose a bucket that was sylindrical. This made it easy to measure difference in volume as we could just measure the difference in water height before and after the drop and then multiply it by $\pi$ and the radius squared. To make sure that the height was the same every time, we built a platform to put the bottle on with a string attached to it. To run the experiment, we would just pull the string such that the bottle fell. The size of the bottle was easy to keep constant as the size only was dependent on the bottle we used. As we had several equal bottles available we were also able to keep the mass density constant by filling one with high density and one with low density before starting the experiments. Thus we did not have to empty the bottles as a cause of the randomized order of the experiments. Lastly, before every drop, we filled up the bucket to the edge to make sure that the volume of water in the bucket before the drop was the same in every run.
 
 ```{r table}#, echo = FALSE}
 factors = c("Height(H)", "Mass density(I)", "Size(S)")
@@ -48,16 +48,16 @@ table <-matrix(c("2 metres", "1 metre", "High density", "Low density", "1,5 litr
 kable(table)
 ```
 
-Each experiment was done independently. Between each run, we reset the platform to its original state and filled the bucket to the same level as before the last drop.
+Each experiment was done independently. Between each run, we reset the platform to its original state and filled the bucket to the same level as prior to the runs.
 
-```{r design}
+```{r design, echo = F, eval = T}
 plan <- FrF2(nruns=2^3, nfactors=3, replications=2, randomize=FALSE)
 colnames(plan) = c('Height','Density','Size')
 ```
 
 ## 6. Analysis of data
 
-```{r fit_model, echo = T, eval=T}
+```{r fit_model, echo = F, eval=T}
 #Response variable
 y <- scan("response.txt")
 
@@ -66,7 +66,8 @@ plan <- add.response(plan, y)
 fit4 <- lm(y~(Height+Density+Size)^3, data = plan)
 summary(fit4)$coef
 ```
-The summary shows the estimated coefficients for the regression model. It appears that A1 (height) and C1 (size of bottle) contributes the most to the mass loss. The interaction between these is also of importance to the response. As the levels of the factors we have chosen for this experiment (-1 and 1) are not assosciated with any continous numerical values, the intercept does not have any solid interpretation.
+
+The summary shows the estimated coefficients for the regression model. It appears that Height and Size contributes the most to the mass loss. The interaction between these is also of importance to the response. As the levels of the factors we have chosen for this experiment (-1 and 1) are not assosciated with any continous numerical values, the intercept does not have any solid interpretation.
 ```{r, echo = F, eval = T}
 # Visualization
 #anova(fit4) # Analysis of variance
@@ -74,14 +75,16 @@ MEPlot(fit4) # main effects plot
 effects <- 2*fit4$coeff
 effects
 ```
+
 The main effects plot is a visualization of the summary above. If a factor has no interaction with others it shows the impact on the expected average response resulting from a change in level, e.g from 1 to -1, for each factor.
 The main effect of a factor is defined as two times the estimated regression coefficient for the corresponding factor. 
-From the main effect plot we observe that all factors have positive effects on the response when the factors change from low to high level. Observe that effect A (Height) and C (Size) contributes the most to the response, while B (Density) is more subtle. This can also be seen in the summary, as the estimateted regression coefficients are greater for A and C than B.
+From the main effect plot we observe that all factors have positive effects on the response when the factors change from low to high level. Observe that effect of Height and Size contributes the most to the response, while Density is more subtle. This can also be seen in the summary, as the estimateted regression coefficients are greater for Height and Size than Density.
 
 ```{r, echo = F, eval = T}
 # Visualization
 IAPlot(fit4) # interaction effect plots
 ```
+
 If a factor has interactions with other factors, the effect on the expected average response when going from low to high level depends on the level of the factor it interacts with.
 If there is no interaction between two factors, the effect of one factor is the same independent of the level of the other factor. This results in parallel lines in the interaction plot. 
 Looking at the interaction plot, it seems as the effect of the content of the bottle is independent on the size of the bottle when the size of the bottle is at a high level, i.e when using a large bottle.
@@ -93,8 +96,7 @@ We also observe that the effect of the size of the bottle is positive when the h
 
 In accordance with what we saw in the summary, it appears that the strongest interaction is between factors Height and Size.
 
-```{r, echo = F, eval = FALSE}
-
+```{r, echo = F, eval = T}
 # SST
 sum((y-mean(y))^2)
 
@@ -105,33 +107,53 @@ effects
 yi1 = y[1:8]
 yi2 = y[9:16]
 
-sigma2 = sum(0.5*(yi1-yi2)^2)/length(yi1)
-sigma2
-sigma2_effekt = 4*sigma2/length(y)
-sigma2_effekt
+sigma2_i = 0.5*(yi1-yi2)^2
+sigma2 = sum(sigma2_i)/length(yi1)
+
+#variance of effect
+sigma2effekt = 4*sigma2/length(y)
+
+plan <- FrF2(nruns=2^3, nfactors=3, randomize=FALSE)
+plan <- add.response(plan,yi1)
+plan <- add.response(plan,yi2)
+plan <- add.response(plan,sigma2_i)
+kable(plan)
 ```
 
+Since we replicated our experiment once, we have two samples for each level combination, both having the same expected value. Above is a table of showing the response value for each run of the experiment along with the variances. The variance of the observations was calculated as 
+$$
+\sigma^2 = \sum_{i = 1}^{8} \frac{(y_{i1}-y_{i2})^2}{2},
+$$
+where $y_{i1}$ and $y_{i2}$ are the ith observation of experiment run 1 and 2, respectively. 
+The calculation yielded the estimation $s^2=$ `r toString(sigma2)`. 
 
-```{r more_info, echo = F, eval = FALSE}
+The variance of the effects are calculated as 
+$$
+\sigma^2_{effect} = \frac{4\sigma^2}{n},
+$$
+where n is the total amount of samples in the full experiment (here n = 16). The above equation follows from the assumption that all the response variabels are independent.
+The calculation results in the estimation $s_{effect}^2=$ `r toString(sigma2effekt)`.
+
+From the residual plot below we see that the residuals are heteroscedatic, which contradicts the model assumption of homoscedatic errors.
+On the other hand, there is no evidence of any non-linear relationship of the factors as the residuals follow a straight line. This indicate that the errors are uncorrelated, hence the model assumption of uncorrelated errors is satisfied.
+Based on this, we will not go forward with a Box-Cox transformation.
+```{r more_info, echo = F, eval = T}
 # 1. fitted vs studentized residuals
 rres <- rstudent(fit4)
 #par(mfrow = c(1,2), oma = rep(0.5,4))
-
+library(ggplot2)
 ggplot(fit4,aes(fit4$fitted,rres)) + geom_point(pch= 21) + geom_hline(yintercept = 0,linetype = 'dashed') + geom_smooth(se = FALSE,col = 'red',size = 0.5,method = 'loess') + labs(x = 'fitted values', y = 'Studentized residuals',title = 'Residual plot',subtitle = 'Fitted values against studentized residuals' )
 
-qqnorm(rres)
-qqline(rres)
-ad.test(rres)
 ```
-Since we replicated our experiment once, we have two samples for each level combination, with both having the same expected value. 
-
-From the residual plot above we see that the residuals are heteroscedatic, which contradicts the model assumption of homoscedatic errors.
-On the other hand, there is no evidence of any non-linear relationship of the factors as the residuals follow a straight line. This indicate that the errors are uncorrelated, hence the model assumption of uncorrelated errors is satisfied.
-Based on this, we will not go forward with a Box-Cox transformation.
 
 Looking at the QQ-plot we observe that the residuals are heavy tailed rather than being normally distributed. However, we see that the Anderson-Darling normality test yields a high p-value, and thus the hypothesis that the residuals are normally distributed is accepted.
 On the other hand, we have quite few data points and therefore it is difficult to conclude on anything with confidence. 
 
+```{r, echo = F, eval = T}
+qqnorm(rres)
+qqline(rres)
+ad.test(rres)
+```
 
 
 ## 7. Conclusion and recommendations
