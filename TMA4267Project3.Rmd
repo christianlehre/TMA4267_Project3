@@ -15,28 +15,28 @@ library(knitr)
 set.seed(42)
 ```
 ## 1. Issue to be addressed
-This report presents a two-level factorial experiment in which we consider how different factors affect the amount of water that is removed from a bucket when dropping a bottle into it. Experiments regarding the effect of items falling into water is relevant in many applications. In a large scale it is of interest to study the effect of pieces of mountain dropping into the ocean creating waves and in a complete different setting it is of interest how much splash a professional diver makes. It would therefore be interesting to study how different factors impact the amount of water that is removed from a bucket when dropping a bottle and considering properties such as height above the water from which the bottles are dropped, size of the bottles and mass density of the bottles.
+This report presents a two-level factorial experiment in which we consider how different factors affect the amount of water that is removed from a bucket when dropping a bottle into it. Experiments regarding the effect of items falling into water is relevant in many applications. In a large scale it is of interest to study the effect of pieces of mountain dropping into the ocean creating waves and in a complete different setting it is of interest how much splash a professional diver makes. It would therefore be interesting to study how different factors impact the amount of water that is removed from a bucket when dropping a bottle, such as height above the water from which the bottles are dropped, size of the bottles and mass density of the bottles.
 
 Former knowledge from fluid mechanics courses gives us some intuition of the expected behaviour. However, it is not obvious which factors that contribute the most to removal of water. We wish to explore this further and in addition determine if there are any interactions between the factors.  
 
 ## 2. Selection of factors and levels
-We have chosen three factors that we believe are relevant for the amount of water removed from the bucket. The first factor is which bottle to be dropped. We have chosen to use two different bottles, one bottle with a volume capacity of 1,5 litres and one with a volume capacity of 0,5 litres. The bottles have the exact same shape, but vary in size. It is natural to assume that a larger volume will affect the removal of water and so we wish to investigate the difference between using  a large and small bottle. 
+We have chosen three factors that we believe are relevant for the amount of water removed from the bucket. The first factor is which bottle to be dropped. We have chosen to use two different bottles, one bottle with a volume capacity of 1,5 litres and one with a volume capacity of 0,5 litres. The bottles have the exact same shape, but vary in size. It is natural to assume that a larger volume will affect the removal of water and so we wish to investigate the difference between using  a large and a small bottle. 
 
-The second factor to be considered is the height from which the bottles are dropped.  We define two heights in this experiment, 1 and 2 meters above the water surface.   This again is expected to affect the removal of water, as the difference in speed when hitting the surface is quite different from these heights.
+The second factor to be considered is the height from which the bottles are dropped.  We define two heights in this experiment, 1 and 2 meters above the water surface. This again is expected to affect the removal of water, as the difference in speed when hitting the surface is quite different from these heights.
 
 The third factor to be considered is mass density in the bottles. Archimedes law tells us that objects with a density higher than water will sink, while object with density lower will float. We have thus chosen to adjust the density between a density lower and higher than water. In which we expect will be a significant factor as it will affect whether or not the bottles float.  We chose to let the lower density be 0.7 times the mass of water and the higher to be 1.3 times the mass of water.
 
 As this is a two-level factorial experiment, all factor levels are recoded to -1 or 1. For bottle type, which is a qualitative factor, this recoding is quite natural. Either we use the large or the small bottle. We’ve considered mass density as a binary variable. It is either higher or lower than water, which  assumably is what matters the most.  However, the effect will probably be dependent of  how far away from equality with water the mass densities are. The last factor, height from which the bottles are dropped, is the least intuitive to be recoded to -1 or 1, but by defining two heights that is expected to give a noticeable change in speed it is possible to define one as low and the other as high. 
 
-To assure that the type of bottle is at the desired level is trivial. For the densitites it is a bit more difficult, but we have the advantages of knowing both the bottles size and the mass density of water. Thus by weighing the bottles with a precise weigth, we can assure that the densities are at the desired level. For the density we simply filled the bottles with water until this was achieved. For the high densities we filled them with water and then added extra weigth in form of lead.
+To assure that the type of bottle is at the desired level is trivial. For the densitites it is a bit more difficult, but we have the advantages of knowing both the bottles size and the mass density of water. Thus by weighing the bottles with a precise weigth, we can assure that the densities are at the desired level. For the low density we simply filled the bottles with water until this was achieved. For the high densities we filled them with water and then added extra weigth in form of lead.
 
 ## 3. Selection of response variable
-The response variable for this problem should be a measurement of how much water is removed from the bucket. To measure this there are several options. A natural measurement is weight, however measuring this with a scale can be difficult. Another approach is to use the reduction in waterlevel height, as it can be measured much more exact by using a measuring tape. This is however not very relatable, unless the bucket is thoroughly described. We chose to instead multiply this height by $\pi$ and the radius of the bucket to obtain the volume reduction. We then multiplied this by the mass density of water to obtain the mass reduction. The uncertainty in measuring the height was judged to be approximately 0.2 millimetres, which corresponds to an uncertainty of 0.012 kilograms in the mass measurement.
+The response variable for this problem should be a measurement of how much water is removed from the bucket. To measure this there are several options. A natural measurement is weight, however measuring this with a scale can be difficult. Another approach is to use the reduction in waterlevel height, as it can be measured much more exact by using a measuring tape. This is however not very relatable, unless the bucket is thoroughly described. We chose to instead multiply this height by $\pi$ and the radius of the bucket squared to obtain the volume reduction. We then multiplied this by the mass density of water to obtain the mass reduction. The uncertainty in measuring the height was judged to be approximately 0.2 millimetres, which corresponds to an uncertainty of 0.012 kilograms in the mass measurement.
 
 ## 4. Choice of design
 The experiment was designed as a $2^3$ factorial design with two replications, which resulted in a total of 16 runs. As the complete experiment could be carried out in a short amount of time, it was unnecessary to use a fractional factorial design.
 
-This is an experiment in which we have a high degree of control over the factors. At the same time, the measurements had some uncertanty to it as we did not have the best equipment available. This fact, in addition to few factors, made it clear that we needed to have replication of the experiments to get enough measurements. Blocking on the other hand was deemed unnecessary for this experiment, since there was no reason to divide the experiments into parts. All of the runs were repeated under the same conditions.
+This is an experiment in which we have a high degree of control over the factors. At the same time, the measurements had some uncertainty to it as we did not have the best equipment available. This fact, in addition to few factors, made it clear that we needed to have replication of the experiments to get enough measurements. Blocking on the other hand was deemed unnecessary for this experiment, since there was no reason to divide the experiments into parts. All of the runs were repeated under the same conditions.
 
 ## 5. Implementation of the experiment
 To perform the experiment, some testing had to be performed on the equipment. First, we had to find the optimal way of calculating the mass reduction. Our first thought was to have a scale under the bucket to measure the weight, but the scales we had available were considered unreliable and uncertain. Instead, we chose a bucket that was sylindrical. This made it easy to measure difference in volume as we could just measure the difference in water height before and after the drop and then multiply it by $\pi$ and the radius squared. To make sure that the height was the same every time, we built a platform to put the bottle on with a string attached to it. To run the experiment, we would just pull the string such that the bottle fell. The size of the bottle was easy to keep constant as the size only was dependent on the bottle we used. As we had several equal bottles available we were also able to keep the mass density constant by filling one with high density and one with low density before starting the experiments. Thus we did not have to empty the bottles as a cause of the randomized order of the experiments. Lastly, before every drop, we filled up the bucket to the edge to make sure that the volume of water in the bucket before the drop was the same in every run.
@@ -48,7 +48,7 @@ table <-matrix(c("2 metres", "1 metre", "High density", "Low density", "1,5 litr
 kable(table)
 ```
 
-Each experiment was done independently. Between each run, we reset the platform to its original state and filled the bucket to the same level as prior to the runs.
+Each experiment was done independently in a randomized order. Between each run, we reset the platform to its original state and filled the bucket to the same level as prior to the runs.
 
 ```{r design, echo = F, eval = T}
 plan <- FrF2(nruns=2^3, nfactors=3, replications=2, randomize=FALSE)
@@ -87,14 +87,13 @@ IAPlot(fit4) # interaction effect plots
 
 If a factor has interactions with other factors, the effect on the expected average response when going from low to high level depends on the level of the factor it interacts with.
 If there is no interaction between two factors, the effect of one factor is the same independent of the level of the other factor. This results in parallel lines in the interaction plot. 
-Looking at the interaction plot, it seems as the effect of the content of the bottle is independent on the size of the bottle when the size of the bottle is at a high level, i.e when using a large bottle.
-That is, when using a large bottle we expect to get the same loss in volume independent on the amount in which the bottle is filled. 
-We also observe this independent effect when the height in which the bottle is dropped is at a low level, i.e when the bottle is dropped at a lower height.
-That is, when the bottle is dropped from a lower height, we expect the to get the same loss in volume independent on the amount of content in the bottle.
 
-We also observe that the effect of the size of the bottle is positive when the height from which the bottle is dropped is both at a high and low level. That is, the volume loss is greater when using a larger bottle, independent of the height from which it is dropped. 
+Looking at the interaction plot, it seems that the effect of the mass density of the bottle interacts with the size of the bottle.
+We observe that when using a large bottle we expect to get the same loss in volume independent of the density of the bottle. This is not the case when using a small bottle, here we expect the volume loss to increase when increasing the mass density. Thus the effect of changing the mass density is affected by the size of the bottle.
 
-In accordance with what we saw in the summary, it appears that the strongest interaction is between factors Height and Size.
+We observe the opposite when considering the interaction of Height and Density. When the height in which the bottle is dropped is at a low level, i.e when the bottle is dropped at a lower height, we expect to get the same loss in volume independent of the density of the bottle. On the other hand, when the heigth is at a high level, we see that density affect the volume loss.
+
+We also observe that the effect of the size of the bottle is positive when the height from which the bottle is dropped is both at a high and low level. That is, the volume loss is greater when using a larger bottle, independent of the height from which it is dropped. However the line is steeper when height is at the high level, indicating interaction. In accordance with what we saw in the summary, it appears that the strongest interaction is in fact between the factors Height and Size.
 
 ```{r, echo = F, eval = T}
 # SST
@@ -134,9 +133,7 @@ $$
 where n is the total amount of samples in the full experiment (here n = 16). The above equation follows from the assumption that all the response variabels are independent.
 The calculation results in the estimation $s_{effect}^2=$ `r toString(sigma2effekt)`.
 
-From the residual plot below we see that the residuals are heteroscedatic, which contradicts the model assumption of homoscedatic errors.
-On the other hand, there is no evidence of any non-linear relationship of the factors as the residuals follow a straight line. This indicate that the errors are uncorrelated, hence the model assumption of uncorrelated errors is satisfied.
-Based on this, we will not go forward with a Box-Cox transformation.
+
 ```{r more_info, echo = F, eval = T}
 # 1. fitted vs studentized residuals
 rres <- rstudent(fit4)
@@ -145,6 +142,10 @@ library(ggplot2)
 ggplot(fit4,aes(fit4$fitted,rres)) + geom_point(pch= 21) + geom_hline(yintercept = 0,linetype = 'dashed') + geom_smooth(se = FALSE,col = 'red',size = 0.5,method = 'loess') + labs(x = 'fitted values', y = 'Studentized residuals',title = 'Residual plot',subtitle = 'Fitted values against studentized residuals' )
 
 ```
+
+From the residual plot above we see that the residuals are heteroscedatic, which contradicts the model assumption of homoscedatic errors.
+On the other hand, there is no evidence of any non-linear relationship of the factors as the residuals follow a straight line. This indicate that the errors are uncorrelated, hence the model assumption of uncorrelated errors is satisfied.
+Based on this, we will not go forward with a Box-Cox transformation.
 
 Looking at the QQ-plot we observe that the residuals are heavy tailed rather than being normally distributed. However, we see that the Anderson-Darling normality test yields a high p-value, and thus the hypothesis that the residuals are normally distributed is accepted.
 On the other hand, we have quite few data points and therefore it is difficult to conclude on anything with confidence. 
@@ -157,5 +158,6 @@ ad.test(rres)
 
 
 ## 7. Conclusion and recommendations
-In conclusion the most significant effects among those tested for the water loss are height from which the bottle is dropped, and the size of the bottle. The interaction between these plays an important role as well.
+In conclusion the most significant effects among those tested for the water loss are height from which the bottle is dropped, and the size of the bottle. The interaction between these plays an important role as well. The effect of increasing the bottle size is larger when dropping it from a large height. The mass density, on the other hand, did not effect the water mass reduction as much as expected. This could be a cause of the bottles having too high density in both the high and low level. We observed that all bottles that where dropped submerged completely in the water, and hence the argument presented earlier with Archimedes law was of little relevance. If the low density had been closer to 0, e.g. 0.1 times the density of water, the effect would probably been much larger.
 
+Further experiments should be done more specific towards what effect to be studied. The results are not that interesting for a bottle alone, but the general results can give indication towards which factors to be tested in other experiments.
