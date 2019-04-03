@@ -52,39 +52,37 @@ Each experiment was done independently. Between each run, we reset the platform 
 
 ```{r design}
 plan <- FrF2(nruns=2^3, nfactors=3, replications=2, randomize=FALSE)
-plan
+colnames(plan) = c('Height','Density','Size')
 ```
 
 ## 6. Analysis of data
 
-```{r fit_model, echo = F, eval=FALSE}
+```{r fit_model, echo = T, eval=T}
 #Response variable
 y <- scan("response.txt")
+
 plan <- add.response(plan, y)
 # Fit model
-plan
-fit4 <- lm(y~(A+B+C)^3, data = plan)
+fit4 <- lm(y~(Height+Density+Size)^3, data = plan)
 summary(fit4)$coef
-#fit4$coef
 ```
 The summary shows the estimated coefficients for the regression model. It appears that A1 (height) and C1 (size of bottle) contributes the most to the mass loss. The interaction between these is also of importance to the response. As the levels of the factors we have chosen for this experiment (-1 and 1) are not assosciated with any continous numerical values, the intercept does not have any solid interpretation.
-
-
-
-
-```{r, echo = F, eval = FALSE}
+```{r, echo = F, eval = T}
 # Visualization
-anova(fit4) # Analysis of variance
+#anova(fit4) # Analysis of variance
 MEPlot(fit4) # main effects plot
-IAPlot(fit4) # interaction effect plots
-```
-
-```{r, include = F, eval = FALSE}
 effects <- 2*fit4$coeff
 effects
 ```
+The main effects plot is a visualization of the summary above. If a factor has no interaction with others it shows the impact on the expected average response resulting from a change in level, e.g from 1 to -1, for each factor.
+The main effect of a factor is defined as two times the estimated regression coefficient for the corresponding factor. 
+From the main effect plot we observe that all factors have positive effects on the response when the factors change from low to high level. Observe that effect A (Height) and C (Size) contributes the most to the response, while B (Density) is more subtle. This can also be seen in the summary, as the estimateted regression coefficients are greater for A and C than B.
 
-The main effects plot is a visualization of the summary above. It shows the impact on the expected avereage response resulting from a change in level, e.g from 1 to -1, for each factor.
+```{r, echo = F, eval = T}
+# Visualization
+IAPlot(fit4) # interaction effect plots
+```
+If a factor has interactions with other factors, the effect on the expected average response when going from low to high level depends on the level of the factor it interacts with.
 If there is no interaction between two factors, the effect of one factor is the same independent of the level of the other factor. This results in parallel lines in the interaction plot. 
 Looking at the interaction plot, it seems as the effect of the content of the bottle is independent on the size of the bottle when the size of the bottle is at a high level, i.e when using a large bottle.
 That is, when using a large bottle we expect to get the same loss in volume independent on the amount in which the bottle is filled. 
@@ -93,33 +91,49 @@ That is, when the bottle is dropped from a lower height, we expect the to get th
 
 We also observe that the effect of the size of the bottle is positive when the height from which the bottle is dropped is both at a high and low level. That is, the volume loss is greater when using a larger bottle, independent of the height from which it is dropped. 
 
-In accordance with what we saw in the summary, it appears that the strongest interaction is between factors A and C, i.e the height in which the bottle was dropped and the size of the bottle. Additionally, there seems to be some interaction between factors C and D, although it may not be significant.
+In accordance with what we saw in the summary, it appears that the strongest interaction is between factors Height and Size.
 
 ```{r, echo = F, eval = FALSE}
-# Displays cut-off values for significant variables according to Lenths. May remove plot if not deemed necessary.
-LenthPlot(fit4, plt = T)
+
+# SST
+sum((y-mean(y))^2)
+
+effects <- 2*fit4$coefficients[-1]
+effects
+
+#Estimate variance of observations
+yi1 = y[1:8]
+yi2 = y[9:16]
+
+sigma2 = sum(0.5*(yi1-yi2)^2)/length(yi1)
+sigma2
+sigma2_effekt = 4*sigma2/length(y)
+sigma2_effekt
 ```
 
-In the Lenth plot we see the effect values for each of the factors and the interactions. The dotted lines are for either the ME (margin of error) or SME (simultaneous margin of error) cutoff. These values are calculated from the PSE (Pseudo Standard Error), which is an estimate of the standard deviation for each of the effects. Let $\beta_j$ is the $j$'th regression coefficient, and thus $2\beta_j$ is the effect related to the corresponding factor. Furthermore, let $m$ be the number of factors. Then under the null hypothesis that an effect is equal to zero the statistic $T = 2\beta_j / PSE$ is approximately t distributed with $m/3$ degrees of freedom. Then an effect is considered significant if $|2\beta_j| > t_{\alpha/2, m/3} \cdot PSE$. Here $t_{\alpha/2, m/3}$ is the ME value. There is an $\alpha$% chance that the effect value is greater than the ME value under the null hypothesis. Similarly one can compute the SME value such that there is an $\alpha$% chance that any of the effects are greater than the SME. Thus if an effect is greater than the SME it should be considered highly significant.
 
-Through inspection of the Lenth plot, vectorizing of functions is clearly an active effect, as its value is greater than the SME. The value for language choice seems significant as as well, since its effect value is higher than the ME. This is not a surprising result, but what is more interesting is the interaction value between language and vectorization. Even though we saw a large increase for vectorization in R, the difference was small compared to the difference in Python, where the non-vectorized functions were almost as high as a factor thousand times the running time for the vectorized function. Through further investigation, we found an explanation for this. The ```numpy``` library which is used for scientific computing in Python, is largely written in C and therefore avoids a lot of the time consuming operations performed "behind the scenes" in standard Python.
-
-Another way to estimate the variance, is to make the assumption that high order interactions, with three or more factors are zero. Under this assumption, the regression model fit is given by
 ```{r more_info, echo = F, eval = FALSE}
-fit2 <- lm(y~.^2,data=plan)
-summary(fit2)
 # 1. fitted vs studentized residuals
-rres <- rstudent(fit2)
-plot(fit2$fitted,rres)
-# 2. normality of residuals
+rres <- rstudent(fit4)
+#par(mfrow = c(1,2), oma = rep(0.5,4))
+
+ggplot(fit4,aes(fit4$fitted,rres)) + geom_point(pch= 21) + geom_hline(yintercept = 0,linetype = 'dashed') + geom_smooth(se = FALSE,col = 'red',size = 0.5,method = 'loess') + labs(x = 'fitted values', y = 'Studentized residuals',title = 'Residual plot',subtitle = 'Fitted values against studentized residuals' )
+
 qqnorm(rres)
 qqline(rres)
-ad.test(rstudent(fit2))
+ad.test(rres)
 ```
-From the Q-Q plot it's not easy to conclude anything. There is a trend for the lower quantiles in which the residuals lie below the true line, as well as an anomaly for the rightmost datapoint. The rightmost point corresponds to the experiment with an exeptionally high response of 220 seconds. A plausible cause for this would be an increase in the computers temperature, slowing down the computer during the experiment. For the leftmost datapoints it's hard to find any similarities that would explain the low values. Considering the p-value from the Anderson-Darling test we may not reject a normal distribution of the residuals either. From the residual plot it appears that there is some trend in the residuals, so the assumption that they are identically distributed may not be correct. However, we have quite few data points and therefore it is difficult to conclude with anything. 
+Since we replicated our experiment once, we have two samples for each level combination, with both having the same expected value. 
+
+From the residual plot above we see that the residuals are heteroscedatic, which contradicts the model assumption of homoscedatic errors.
+On the other hand, there is no evidence of any non-linear relationship of the factors as the residuals follow a straight line. This indicate that the errors are uncorrelated, hence the model assumption of uncorrelated errors is satisfied.
+Based on this, we will not go forward with a Box-Cox transformation.
+
+Looking at the QQ-plot we observe that the residuals are heavy tailed rather than being normally distributed. However, we see that the Anderson-Darling normality test yields a high p-value, and thus the hypothesis that the residuals are normally distributed is accepted.
+On the other hand, we have quite few data points and therefore it is difficult to conclude on anything with confidence. 
+
+
 
 ## 7. Conclusion and recommendations
-In conclusion the most significant effects among those tested for the running time of matrix multiplication are vectorization of functions, and choice of language. The interaction between these plays an important role as well, as the difference between vectorized and non-vectorized functions affects the running time to a larger degree for Python than for R. 
+In conclusion the most significant effects among those tested for the water loss are height from which the bottle is dropped, and the size of the bottle. The interaction between these plays an important role as well.
 
-In comparison to these effects, memory usage and hardware differences do not have a signifcant effect on running time. Further experiments should be performed using only vectorized functions, to investigate how these effects affect the program running time. It could also be interesting to find out if the relations are similar for other calculations such as solving linear systems, or for sparse matrix computations.
-ons such as solving linear systems, or for sparse matrix computations.
